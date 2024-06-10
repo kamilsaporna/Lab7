@@ -14,7 +14,7 @@ const DataForm = () => {
   useEffect(() => {
     axios
       .get(
-        "https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/"
+        "https://idyllic-crumble-4ee68d.netlify.app/.netlify/functions/api/"
       )
       .then((res) => {
         setData(res.data);
@@ -27,7 +27,7 @@ const DataForm = () => {
   function handleDelete(id) {
     axios
       .delete(
-        `https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/${id}`
+        `https://idyllic-crumble-4ee68d.netlify.app/.netlify/functions/api/${id}`
       )
       .then(() => {
         setData(data.filter((item) => item._id !== id));
@@ -61,7 +61,7 @@ const DataForm = () => {
       // Additionally, update the state immediately after adding to reflect changes in the table
       axios
         .get(
-          "https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/"
+          "https://idyllic-crumble-4ee68d.netlify.app/.netlify/functions/api/"
         )
         .then((res) => {
           setData(res.data);
@@ -88,25 +88,33 @@ const DataForm = () => {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Product Type",
+      dataIndex: "productType",
+      key: "productType",
       width: "30%",
       className:
         "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
       width: "20%",
       className:
         "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Unit (eg. kg, litre)",
+      dataIndex: "unit",
+      key: "unit",
+      width: "30%",
+      className:
+        "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
       width: "30%",
       className:
         "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
@@ -145,7 +153,7 @@ const DataForm = () => {
   return (
     <div className="mt-4">
       <Typography.Title level={2} className="text-center">
-        Authors List
+        Inventory Management
       </Typography.Title>
       <Table
         className="w-full divide-y divide-gray-200"

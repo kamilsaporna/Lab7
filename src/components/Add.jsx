@@ -7,17 +7,17 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 const Add = ({ onAdd }) => {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
-  const [existingNames, setExistingNames] = useState([]);
+  const [existingProduct, setExistingProduct] = useState([]);
 
   useEffect(() => {
     // Fetch existing names when component mounts
     axios
       .get(
-        "https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/"
+        "https://idyllic-crumble-4ee68d.netlify.app/.netlify/functions/api/"
       )
       .then((res) => {
-        const names = res.data.map((item) => item.name);
-        setExistingNames(names);
+        const products = res.data.map((item) => item.productType);
+        setExistingProduct(products);
       })
       .catch((error) => {
         console.error("Error fetching existing data: ", error);
@@ -33,25 +33,25 @@ const Add = ({ onAdd }) => {
   };
 
   const onFinish = (values) => {
-    const { name, age } = values;
-    if (existingNames.includes(name)) {
-      message.error("Name already exists. Please enter a different name.");
+    const { productType, quantity } = values;
+    if (existingProduct.includes(productType)) {
+      message.error("Product already exists. Please enter a different product.");
       return;
     }
 
-    if (name.length < 3) {
-      message.error("Please enter at least three characters for the name.");
+    if (productType.length < 3) {
+      message.error("Please enter at least three characters for the product.");
       return;
     }
 
-    if (isNaN(age) || age === "") {
-      message.error("Please enter a valid number for the age.");
+    if (isNaN(quantity) || quantity === "") {
+      message.error("Please enter a valid number for the quantity.");
       return;
     }
 
     axios
       .post(
-        "https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/",
+        "https://idyllic-crumble-4ee68d.netlify.app/.netlify/functions/api/",
         values
       )
       .then((res) => {
@@ -76,30 +76,30 @@ const Add = ({ onAdd }) => {
         <PlusCircleOutlined className="mr-2" /> New Author
       </Button>
       <Modal
-        title="Add New Author"
+        title="Add New Product"
         visible={visible}
         onCancel={handleCancel}
         footer={null}
       >
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: "Please enter name" }]}
+            name="productType"
+            label="Prouct Type"
+            rules={[{ required: true, message: "Please enter product type" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="age"
-            label="Age"
-            rules={[{ required: true, message: "Please enter age" }]}
+            name="quantity"
+            label="Quantity"
+            rules={[{ required: true, message: "Please enter quantity" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="address"
-            label="Address"
-            rules={[{ required: true, message: "Please enter addres" }]}
+            name="unit"
+            label="Unit (e.g Kilo, Litre, etc)"
+            rules={[{ required: true, message: "Please enter unit" }]}
           >
             <Input />
           </Form.Item>
