@@ -11,7 +11,7 @@ const Update = ({ record, onCancel, onUpdate }) => {
   useEffect(() => {
     // Fetch existing names when component mounts
     axios
-      .get("https://starlit-choux-d84394.netlify.app/.netlify/functions/api/")
+      .get("https://cerulean-salamander-862797.netlify.app/.netlify/functions/api")
       .then((res) => {
         const names = res.data.map((item) => item.name);
         setExistingNames(names);
@@ -42,7 +42,7 @@ const Update = ({ record, onCancel, onUpdate }) => {
 
     try {
       await axios.put(
-        `https://starlit-choux-d84394.netlify.app/.netlify/functions/api/${record._id}`,
+        `https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/${record._id}`,
         values
       );
       message.success("Data updated successfully");
@@ -68,7 +68,7 @@ const Update = ({ record, onCancel, onUpdate }) => {
           form={form}
           onFinish={onFinish}
           layout="vertical"
-          initialValues={{ name: record.name, age: record.age }}
+          initialValues={{ name: record.name, age: record.age, address: record.address }}
         >
           <Form.Item
             name="name"
@@ -94,6 +94,13 @@ const Update = ({ record, onCancel, onUpdate }) => {
         >
           <Input type="number" />
         </Form.Item>
+        <Form.Item
+            name="address"
+            label="Address"
+            rules={[{ required: true, message: "Please input the address!" }]}
+          >
+            <Input />
+          </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit">

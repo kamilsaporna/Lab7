@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { Button, Table, Popconfirm, message } from "antd";
+import { useState, useEffect } from "react";
+import { Button, Table, Modal, message, Typography } from "antd";
 import axios from "axios";
-import { useEffect } from "react";
 import Update from "./Update";
 import Add from "./Add";
 
@@ -9,10 +8,14 @@ const DataForm = () => {
   const [data, setData] = useState([]);
   const [updateMode, setUpdateMode] = useState(false);
   const [updateRecord, setUpdateRecord] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     axios
-      .get("https://starlit-choux-d84394.netlify.app/.netlify/functions/api/")
+      .get(
+        "https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/"
+      )
       .then((res) => {
         setData(res.data);
       })
@@ -23,10 +26,12 @@ const DataForm = () => {
 
   function handleDelete(id) {
     axios
-      .delete(`https://starlit-choux-d84394.netlify.app/.netlify/functions/api/${id}`)
+      .delete(
+        `https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/${id}`
+      )
       .then(() => {
         setData(data.filter((item) => item._id !== id));
-        message.success('Data deleted successfully');
+        message.success("Data deleted successfully");
       })
       .catch((error) => {
         console.error("Error deleting data: ", error);
@@ -39,21 +44,25 @@ const DataForm = () => {
   };
 
   const handleUpdate = (id, updatedData) => {
-    setData(data.map(item => item._id === id ? { ...item, ...updatedData } : item));
+    setData(
+      data.map((item) => (item._id === id ? { ...item, ...updatedData } : item))
+    );
     setUpdateMode(false); // After update, close the modal
   };
 
   const handleAdd = (newData, callback) => {
     // Update the state with the new data
-    setData(prevData => [...prevData, newData]);
-  
+    setData((prevData) => [...prevData, newData]);
+
     // Close the add modal if a callback function is provided
     if (callback) {
       callback();
-  
+
       // Additionally, update the state immediately after adding to reflect changes in the table
       axios
-        .get("https://starlit-choux-d84394.netlify.app/.netlify/functions/api/")
+        .get(
+          "https://cerulean-salamander-862797.netlify.app/.netlify/functions/api/"
+        )
         .then((res) => {
           setData(res.data);
         })
@@ -62,41 +71,72 @@ const DataForm = () => {
         });
     }
   };
-  
-  
+
+  const showModal = (id) => {
+    setIsModalVisible(true);
+    setDeleteId(id);
+  };
+
+  const handleOk = () => {
+    handleDelete(deleteId);
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: '50%',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      width: "30%",
+      className:
+        "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      width: '30%'
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      width: "20%",
+      className:
+        "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      width: "30%",
+      className:
+        "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
     },
     {
       title: (
-        <span>
+        <span className="flex items-center px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
           Action
           <Add onAdd={handleAdd} />
         </span>
       ),
-      key: 'action',
+      key: "action",
+      className:
+        "px-6 py-3 bg-gray-50 text-left text-sm font-bold text-gray-500 uppercase tracking-wider",
       render: (text, record) => (
         <span className="flex gap-3">
-          <Button onClick={() => handleUpdateClick(record)}>Update</Button>
-          <Popconfirm
-            title="Are you sure you want to delete this data?"
-            onConfirm={() => handleDelete(record._id)}
-            okText="Yes"
-            cancelText="No"
+          <Button
+            className="text-indigo-600 hover:text-indigo-900"
+            onClick={() => handleUpdateClick(record)}
           >
-            <Button type="primary" danger>Delete</Button>
-          </Popconfirm>
+            Update
+          </Button>
+          <Button
+            className="text-red-600 hover:text-red-900"
+            type="primary"
+            danger
+            onClick={() => showModal(record._id)}
+          >
+            Delete
+          </Button>
         </span>
       ),
     },
@@ -104,8 +144,29 @@ const DataForm = () => {
 
   return (
     <div className="mt-4">
-      <Table columns={columns} dataSource={data} />
-      {updateMode && <Update record={updateRecord} onCancel={() => setUpdateMode(false)} onUpdate={handleUpdate} />}
+      <Typography.Title level={2} className="text-center">
+        Authors List
+      </Typography.Title>
+      <Table
+        className="w-full divide-y divide-gray-200"
+        columns={columns}
+        dataSource={data}
+      />
+      {updateMode && (
+        <Update
+          record={updateRecord}
+          onCancel={() => setUpdateMode(false)}
+          onUpdate={handleUpdate}
+        />
+      )}
+      <Modal
+        title="Are you sure you want to delete this data?"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Yes"
+        cancelText="No"
+      ></Modal>
     </div>
   );
 };
