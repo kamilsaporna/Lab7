@@ -73,7 +73,7 @@ const Add = ({ onAdd }) => {
         type="primary"
         onClick={showModal}
       >
-        <PlusCircleOutlined className="mr-2" /> New Author
+        <PlusCircleOutlined className="mr-2" /> New Product
       </Button>
       <Modal
         title="Add New Product"
